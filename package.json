@@ -1,0 +1,31 @@
+{
+  "name": "cs141-ups-mangement-card",
+  "version": "1.0.0",
+  "description": "Node.JS API for CS141 Management Card for UPS Systems",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node .",
+    "dev": "ts-node-dev --respawn --no-deps --rs --cls ./src/index.ts"
+  },
+  "keywords": [
+    "template",
+    "typescript"
+  ],
+  "author": "Jens Hummel, Nico Wagner",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.6.3",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "eslint": "^8.21.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
