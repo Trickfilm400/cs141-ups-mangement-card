@@ -1,9 +1,15 @@
 {
-  "name": "cs141-ups-mangement-card",
+  "name": "@trickfilm400/cs141-ups-mangement-card",
   "version": "1.0.0",
   "description": "Node.JS API for CS141 Management Card for UPS Systems",
   "main": "./dist/index.js",
+  "typings": "./types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node .",
     "dev": "ts-node-dev --respawn --no-deps --rs --cls ./src/index.ts"
@@ -12,8 +18,8 @@
     "template",
     "typescript"
   ],
-  "author": "Jens Hummel, Nico Wagner",
-  "license": "ISC",
+  "author": "Nico W. <info@ni-wa.de> (https://trickfilm400.de/)",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.6.3",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
@@ -27,5 +33,8 @@
   },
   "dependencies": {
     "axios": "^0.27.2"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
   }
 }
