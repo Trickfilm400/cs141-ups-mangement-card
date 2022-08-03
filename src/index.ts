@@ -6,6 +6,19 @@ import axios, {
 } from 'axios';
 import * as https from 'https';
 
+export interface IAPIResponseData {
+  report: {
+    time: string;
+    refresh: number;
+    _platform: string;
+  };
+  ups: {
+    _oemViewName: string;
+    _selected_ups_id: number;
+    valtable: Record<string, string | string[] | number | number[]>;
+  };
+}
+
 export class CS141 {
   private readonly host: string;
   private readonly username: string;
@@ -24,13 +37,13 @@ export class CS141 {
     });
   }
 
-  private request(): Promise<AxiosResponse<Record<string, string>>> {
+  private request(): Promise<AxiosResponse<IAPIResponseData>> {
     return new Promise((resolve, reject) => {
       const requestHeader: AxiosRequestHeaders = {};
       if (this.headers && this.headers['set-cookie'])
         requestHeader['cookie'] = this.headers['set-cookie'].join(';');
       this.axios
-        .get<Record<string, string>>(this.host + '/api/devices/ups/report', {
+        .get<IAPIResponseData>(this.host + '/api/devices/ups/report', {
           headers: requestHeader,
         })
         .then((res) => {
@@ -41,7 +54,7 @@ export class CS141 {
     });
   }
 
-  public handleRequest() {
+  public handleRequest(): Promise<IAPIResponseData> {
     return new Promise((resolve, reject) => {
       this.request()
         .then((request) => {
