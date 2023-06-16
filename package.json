@@ -1,6 +1,6 @@
 {
   "name": "@trickfilm400/cs141-ups-mangement-card",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node.JS API for CS141 Management Card for UPS Systems",
   "main": "./dist/index.js",
   "typings": "./types/index.d.ts",
@@ -35,6 +35,6 @@
     "axios": "^1.4.0"
   },
   "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com"
   }
 }
