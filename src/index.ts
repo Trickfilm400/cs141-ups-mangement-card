@@ -1,8 +1,9 @@
 import axios, {
+  AxiosHeaders,
   AxiosInstance,
-  AxiosRequestHeaders,
   AxiosResponse,
   AxiosResponseHeaders,
+  RawAxiosResponseHeaders,
 } from 'axios';
 import * as https from 'https';
 
@@ -24,7 +25,7 @@ export class CS141 {
   private readonly username: string;
   private readonly password: string;
 
-  private headers: AxiosResponseHeaders;
+  private headers: RawAxiosResponseHeaders | AxiosResponseHeaders;
   private readonly axios: AxiosInstance;
 
   constructor(host: string, username: string, password: string) {
@@ -39,7 +40,7 @@ export class CS141 {
 
   private request(): Promise<AxiosResponse<IAPIResponseData>> {
     return new Promise((resolve, reject) => {
-      const requestHeader: AxiosRequestHeaders = {};
+      const requestHeader = new AxiosHeaders();
       if (this.headers && this.headers['set-cookie'])
         requestHeader['cookie'] = this.headers['set-cookie'].join(';');
       this.axios
