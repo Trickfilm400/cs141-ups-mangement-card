@@ -1,6 +1,6 @@
 {
   "name": "@trickfilm400/cs141-ups-mangement-card",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Node.JS API for CS141 Management Card for UPS Systems",
   "main": "./dist/index.js",
   "typings": "./types/index.d.ts",
