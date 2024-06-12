@@ -23,6 +23,10 @@
     "management-card",
     "cs141-ups-mangement-card"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Trickfilm400/cs141-ups-mangement-card"
+  },
   "author": "Nico W. <info@ni-wa.de> (https://trickfilm400.de/)",
   "license": "MIT",
   "devDependencies": {
