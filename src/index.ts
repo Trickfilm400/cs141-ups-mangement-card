@@ -66,11 +66,14 @@ export class CS141 {
         })
         .catch((e) => {
           //console.log(e);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           if (e.code === 'ERR_BAD_REQUEST') {
-            this.login().then((login) => {
-              this.headers = login.headers;
-              this.request().then((d) => resolve(d.data), reject);
-            });
+            this.login()
+              .then((login) => {
+                this.headers = login.headers;
+                this.request().then((d) => resolve(d.data), reject);
+              })
+              .catch(reject);
           }
         });
     });
@@ -85,7 +88,7 @@ export class CS141 {
         })
         .then((res) => {
           if (res.status == 200) resolve(res);
-          else reject();
+          else reject(new Error('No 200 HTTP Status message'));
         })
         .catch(reject);
     });
