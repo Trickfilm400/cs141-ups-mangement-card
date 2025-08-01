@@ -19,4 +19,4 @@ z.handleRequest().then(console.log, console.log);
 ```
 
 
-&copy; 2022-2024 Trickfilm400
+&copy; 2022-2025 Trickfilm400
