@@ -25,7 +25,7 @@ export class CS141 {
   private readonly username: string;
   private readonly password: string;
 
-  private headers: RawAxiosResponseHeaders | AxiosResponseHeaders;
+  private headers?: RawAxiosResponseHeaders | AxiosResponseHeaders;
   private readonly axios: AxiosInstance;
 
   constructor(host: string, username: string, password: string) {
