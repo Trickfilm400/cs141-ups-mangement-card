@@ -30,7 +30,7 @@
   "author": "Nico W. <info@ni-wa.de> (https://trickfilm400.de/)",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^22.19.17",
+    "@types/node": "^22.19.19",
     "@trickfilm400/eslint-shared-config": "^0.0.2",
     "prettier": "^3.8.3",
     "ts-node": "^10.9.2",
@@ -38,7 +38,7 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "axios": "^1.15.2"
+    "axios": "^1.16.0"
   },
   "publishConfig": {
     "access": "public"
