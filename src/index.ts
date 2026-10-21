@@ -1,11 +1,6 @@
-import axios, {
-  AxiosHeaders,
-  AxiosInstance,
-  AxiosResponse,
-  AxiosResponseHeaders,
-  RawAxiosResponseHeaders,
-} from 'axios';
-import * as https from 'https';
+/*eslint-disable @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-explicit-any*/
+import { fetch, Agent, RequestInit, BodyInit } from 'undici';
+import { HeaderRecord } from 'undici/types/header';
 
 export interface IAPIResponseData {
   report: {
@@ -24,73 +19,70 @@ export class CS141 {
   private readonly host: string;
   private readonly username: string;
   private readonly password: string;
-
-  private headers?: RawAxiosResponseHeaders | AxiosResponseHeaders;
-  private readonly axios: AxiosInstance;
+  private cookie?: string;
+  private readonly agent: Agent;
 
   constructor(host: string, username: string, password: string) {
     this.host = host;
     this.username = username;
     this.password = password;
-    this.axios = axios.create({
-      baseURL: 'https://' + this.host,
-      httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-    });
+    this.agent = new Agent({ connect: { rejectUnauthorized: false } });
   }
 
-  private request(): Promise<AxiosResponse<IAPIResponseData>> {
-    return new Promise((resolve, reject) => {
-      const requestHeader = new AxiosHeaders();
-      if (this.headers && this.headers['set-cookie'])
-        requestHeader['cookie'] = this.headers['set-cookie'].join(';');
-      this.axios
-        .get<IAPIResponseData>(this.host + '/api/devices/ups/report', {
-          headers: requestHeader,
-        })
-        .then((res) => {
-          //console.log(res);
-          resolve(res);
-        })
-        .catch(reject);
-    });
+  private createRequestOptions(method: 'GET' | 'POST', body?: BodyInit | null) {
+    const options: RequestInit = {
+      method,
+      headers: {},
+      dispatcher: this.agent,
+    };
+    if (this.cookie) {
+      (options.headers as HeaderRecord)['Cookie'] = this.cookie;
+    }
+    if (body) {
+      (options.headers as HeaderRecord)['Content-Type'] = 'application/json';
+      options.body = body;
+    }
+    return options;
   }
 
-  public handleRequest(): Promise<IAPIResponseData> {
-    return new Promise((resolve, reject) => {
-      this.request()
-        .then((request) => {
-          // else {
-          resolve(request.data);
-          //this.request().then(resolve, reject);
-          //}
-        })
-        .catch((e) => {
-          //console.log(e);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          if (e.code === 'ERR_BAD_REQUEST') {
-            this.login()
-              .then((login) => {
-                this.headers = login.headers;
-                this.request().then((d) => resolve(d.data), reject);
-              })
-              .catch(reject);
-          }
-        });
-    });
+  private async request(): Promise<IAPIResponseData> {
+    const url = `https://${this.host}/api/devices/ups/report`;
+    const opts = this.createRequestOptions('GET');
+    const response = await fetch(url, opts);
+    if (response.status !== 200) {
+      const err = new Error(`HTTP ${response.status}`);
+      (err as any).status = response.status;
+      throw err;
+    }
+    const textString = await response.text();
+    return JSON.parse(textString) as IAPIResponseData;
   }
 
-  private login(): Promise<AxiosResponse<Record<string, string>>> {
-    return new Promise((resolve, reject) => {
-      this.axios
-        .post<Record<string, string>>(this.host + '/api/login', {
-          userName: this.username,
-          password: this.password,
-        })
-        .then((res) => {
-          if (res.status == 200) resolve(res);
-          else reject(new Error('No 200 HTTP Status message'));
-        })
-        .catch(reject);
-    });
+  public async handleRequest(): Promise<IAPIResponseData> {
+    try {
+      return await this.request();
+    } catch (e: any) {
+      if (e.status === 400 || e.status === 401) {
+        await this.login();
+        return await this.request();
+      }
+      throw e;
+    }
+  }
+
+  private async login(): Promise<void> {
+    const url = `https://${this.host}/api/login`;
+    const body = { userName: this.username, password: this.password };
+    const opts = this.createRequestOptions('POST', JSON.stringify(body));
+    const { status, headers } = await fetch(url, opts);
+    if (status !== 200) {
+      throw new Error(`Login failed with status ${status}`);
+    }
+    const setCookie = headers.getSetCookie();
+    if (Array.isArray(setCookie)) {
+      this.cookie = setCookie.join('; ');
+    } else if (typeof setCookie === 'string') {
+      this.cookie = setCookie;
+    }
   }
 }
